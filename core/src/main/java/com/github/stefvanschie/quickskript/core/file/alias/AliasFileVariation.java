@@ -42,7 +42,7 @@ public class AliasFileVariation {
      */
     public AliasFileVariation(@NotNull List<String> entries, @NotNull String name, boolean optional) {
         this.entries = entries;
-        this.name = name;
+        this.name = '{' + name + '}';
         this.optional = optional;
     }
 

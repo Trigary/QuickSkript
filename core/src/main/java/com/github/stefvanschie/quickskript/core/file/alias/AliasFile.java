@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * An alias file. This alias file contains parsed data about its contents.
@@ -88,17 +87,16 @@ public class AliasFile {
 
         for (AliasFileVariation variation : variations) {
             String name = variation.getName();
-            String quote = Pattern.quote('{' + name + '}');
 
-            if (!pattern.contains('{' + name + '}') && variation.isOptional()) {
-                patterns.add(pattern.replaceFirst(' ' + quote + '|' + quote + " ?", ""));
-                continue;
-            } else if (!pattern.contains('{' + name + '}')) {
+            int index = pattern.indexOf(name);
+            if (index == -1) {
                 continue;
             }
 
+            String partOne = pattern.substring(0, index);
+            String partTwo = pattern.substring(index + name.length());
             for (String entry : variation.getEntries()) {
-                String replaced = pattern.replaceFirst(quote, entry);
+                String replaced = partOne + entry + partTwo;
 
                 patterns.addAll(variationCombinations(replaced, variations));
             }
